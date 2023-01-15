@@ -39,7 +39,6 @@ fn animate(
 
                 let current_state = animation_state_machine.get_current_state();
                 if current_state.translate.is_some() {
-                    println!("requesting window move");
                     request_window_move.send(RequestWindowRelativeMove)
                 }
             }

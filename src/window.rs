@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, window::WindowResizeConstraints};
 
 use crate::animation_states::state_machine::AnimationStateMachine;
 
@@ -20,6 +20,13 @@ impl Plugin for CustomWindowPlugin {
                         window: WindowDescriptor {
                             transparent: true,
                             decorations: false,
+                            height: 50.0,
+                            width: 50.0,
+                            resize_constraints: WindowResizeConstraints {
+                                min_width: 10.0,
+                                min_height: 10.0,
+                                ..default()
+                            },
                             ..default()
                         },
                         ..default()
@@ -70,7 +77,6 @@ fn move_window(
             )
         };
 
-        println!("new position: {:?}", new_position);
         window.set_position(MonitorSelection::Primary, new_position);
     }
 }

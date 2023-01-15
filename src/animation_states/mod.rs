@@ -83,7 +83,6 @@ fn advance_state(
 ) {
     if next_state_request.iter().count() > 0 {
         animation_state_machine.advance_state();
-        println!("{:?}", animation_state_machine.current_state);
 
         request_window_resize.send(RequestWindowResize);
         request_window_move.send(RequestWindowRelativeMove);
