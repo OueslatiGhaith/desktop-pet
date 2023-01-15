@@ -51,7 +51,7 @@ fn load_sprites(
     commands.spawn((
         SpriteSheetBundle {
             texture_atlas: initial_handle.clone(),
-            transform: Transform::from_scale(Vec3::splat(6.0)),
+            transform: Transform::from_scale(Vec3::splat(1.0)),
             ..default()
         },
         AnimationTimer(Timer::from_seconds(

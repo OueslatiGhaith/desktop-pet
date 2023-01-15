@@ -36,11 +36,10 @@ pub struct RequestWindowResize(pub f32, pub f32);
 pub struct RequestWindowRelativeMove(pub IVec2);
 
 fn resize_window(mut windows: ResMut<Windows>, mut event: EventReader<RequestWindowResize>) {
-    // TODO: add back
-    // for event in event.iter() {
-    //     let window = windows.get_primary_mut().unwrap();
-    //     window.set_resolution(event.0, event.1);
-    // }
+    for event in event.iter() {
+        let window = windows.get_primary_mut().unwrap();
+        window.set_resolution(event.0, event.1);
+    }
 }
 
 fn move_window(mut windows: ResMut<Windows>, mut event: EventReader<RequestWindowRelativeMove>) {
