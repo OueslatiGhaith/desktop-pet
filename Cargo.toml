@@ -1,0 +1,21 @@
+[package]
+name = "desktop-pet-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# TODO: remove dynamic before release build
+bevy = { version="0.9.1", features=["dynamic", "wayland"] }
+rand = "0.8.5"
+serde = "1.0.152"
+serde_json = "1.0.91"
+
+# enable a small amount of optimization in debug mode
+[profile.dev]
+opt-level = 1
+
+# enable high optimizations for dependencies (incl. Bevy), but not for our code
+[profile.dev.package."*"]
+opt-level = 3

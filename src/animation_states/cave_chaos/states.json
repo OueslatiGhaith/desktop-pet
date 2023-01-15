@@ -1,0 +1,220 @@
+[
+  {
+    "state_name": "miner_sleeping",
+    "dims": [0, 0, 50, 50],
+    "sprite": {
+      "file_name": "cave_chaos/sleeping.png",
+      "rows": 1,
+      "columns": 7,
+      "frame_duration": 0.2
+    },
+    "transitions_to": [
+      {
+        "target": "miner_sleeping",
+        "probability": 0.9
+      },
+      {
+        "target": "miner_wakeup",
+        "probability": 0.1
+      }
+    ]
+  },
+  {
+    "state_name": "miner_wakeup",
+    "dims": [0, 0, 50, 50],
+    "sprite": {
+      "file_name": "cave_chaos/wakeup.png",
+      "rows": 1,
+      "columns": 4,
+      "frame_duration": 0.1
+    },
+    "transitions_to": [
+      {
+        "target": "miner_idle",
+        "probability": 0.995
+      },
+      {
+        "target": "miner_mutating",
+        "probability": 0.005
+      }
+    ]
+  },
+  {
+    "state_name": "miner_idle",
+    "dims": [0, 0, 45, 50],
+    "sprite": {
+      "file_name": "cave_chaos/idle.png",
+      "rows": 1,
+      "columns": 7,
+      "frame_duration": 0.1
+    },
+    "transitions_to": [
+      {
+        "target": "miner_idle",
+        "probability": 0.4
+      },
+      {
+        "target": "miner_walk",
+        "probability": 0.4
+      },
+      {
+        "target": "miner_irish",
+        "probability": 0.2
+      }
+    ]
+  },
+  {
+    "state_name": "miner_irish",
+    "dims": [0, 0, 45, 50],
+    "sprite": {
+      "file_name": "cave_chaos/irish.png",
+      "rows": 1,
+      "columns": 22,
+      "frame_duration": 0.1
+    },
+    "transitions_to": [
+      {
+        "target": "miner_irish",
+        "probability": 0.1
+      },
+      {
+        "target": "miner_flip",
+        "probability": 0.1
+      },
+      {
+        "target": "miner_tired",
+        "probability": 0.1
+      }
+    ]
+  },
+  {
+    "state_name": "miner_flip",
+    "dims": [-20, -20, 70, 70],
+    "sprite": {
+      "file_name": "cave_chaos/flip.png",
+      "rows": 1,
+      "columns": 10,
+      "frame_duration": 0.1
+    },
+    "transitions_to": [
+      {
+        "target": "miner_irish",
+        "probability": 1
+      }
+    ]
+  },
+  {
+    "state_name": "miner_tired",
+    "dims": [0, 0, 45, 50],
+    "sprite": {
+      "file_name": "cave_chaos/idle.png",
+      "rows": 1,
+      "columns": 7,
+      "frame_duration": 0.1
+    },
+    "transitions_to": [
+      {
+        "target": "miner_tired",
+        "probability": 0.8
+      },
+      {
+        "target": "miner_sleeping",
+        "probability": 0.2
+      }
+    ]
+  },
+  {
+    "state_name": "miner_walk",
+    "dims": [0, 0, 45, 50],
+    "move": [2, 0],
+    "sprite": {
+      "file_name": "cave_chaos/walk.png",
+      "rows": 1,
+      "columns": 9,
+      "frame_duration": 0.1
+    },
+    "transitions_to": [
+      {
+        "target": "miner_walk",
+        "probability": 0.7
+      },
+      {
+        "target": "miner_run",
+        "probability": 0.2
+      },
+      {
+        "target": "miner_tired",
+        "probability": 0.1
+      }
+    ]
+  },
+  {
+    "state_name": "miner_run",
+    "dims": [0, 0, 45, 50],
+    "move": [4, 0],
+    "sprite": {
+      "file_name": "cave_chaos/run.png",
+      "rows": 1,
+      "columns": 5,
+      "frame_duration": 0.1
+    },
+    "transitions_to": [
+      {
+        "target": "miner_walk",
+        "probability": 0.3
+      },
+      {
+        "target": "miner_run",
+        "probability": 0.7
+      }
+    ]
+  },
+  {
+    "state_name": "miner_mutating",
+    "dims": [-30, -23, 95, 73],
+    "sprite": {
+      "file_name": "cave_chaos/mutating.png",
+      "rows": 1,
+      "columns": 37,
+      "frame_duration": 0.1
+    },
+    "transitions_to": [
+      {
+        "target": "mutant_small_puke",
+        "probability": 1
+      }
+    ]
+  },
+  {
+    "state_name": "mutant_small_puke",
+    "dims": [-30, -5, 130, 55],
+    "sprite": {
+      "file_name": "cave_chaos/mutant_small_puke.png",
+      "rows": 1,
+      "columns": 20,
+      "frame_duration": 0.1
+    },
+    "transitions_to": [
+      {
+        "target": "mutant_big_puke",
+        "probability": 1
+      }
+    ]
+  },
+  {
+    "state_name": "mutant_big_puke",
+    "dims": [-30, -5, 130, 55],
+    "sprite": {
+      "file_name": "cave_chaos/mutant_big_puke.png",
+      "rows": 1,
+      "columns": 12,
+      "frame_duration": 0.1
+    },
+    "transitions_to": [
+      {
+        "target": "mutant_small_puke",
+        "probability": 1
+      }
+    ]
+  }
+]
