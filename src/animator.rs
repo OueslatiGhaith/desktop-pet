@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::animation_states::{AnimationTimer, RequestNextState};
+use crate::{
+    animation_states::{state_machine::AnimationStateMachine, AnimationTimer, RequestNextState},
+    window::RequestWindowRelativeMove,
+};
 
 pub struct AnimatorPlugin;
 
@@ -19,6 +22,8 @@ fn animate(
         &mut TextureAtlasSprite,
         &Handle<TextureAtlas>,
     )>,
+    animation_state_machine: Res<AnimationStateMachine>,
+    mut request_window_move: EventWriter<RequestWindowRelativeMove>,
 ) {
     for (mut timer, mut sprite, texture_atlas_handle) in &mut query {
         timer.tick(time.delta());
@@ -28,10 +33,15 @@ fn animate(
 
             if sprite.index + 1 == texture_atlas.textures.len() {
                 sprite.index = 0;
-                println!("requesting next state");
                 request_next_state.send(RequestNextState);
             } else {
-                sprite.index += 1
+                sprite.index += 1;
+
+                let current_state = animation_state_machine.get_current_state();
+                if current_state.translate.is_some() {
+                    println!("requesting window move");
+                    request_window_move.send(RequestWindowRelativeMove)
+                }
             }
         }
     }

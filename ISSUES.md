@@ -1,5 +1,5 @@
 ## features
-    - [ ] animation states that move across the screen
+    - [x] animation states that move across the screen
     - [ ] screen edge detection (to prevent walking off-screen)
 
 ## bugs

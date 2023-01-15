@@ -27,6 +27,8 @@ fn load_sprites(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     animation_state_machine: Res<state_machine::AnimationStateMachine>,
+    mut request_window_resize: EventWriter<RequestWindowResize>,
+    mut request_window_move: EventWriter<RequestWindowRelativeMove>,
 ) {
     let mut handles = HashMap::new();
 
@@ -61,6 +63,10 @@ fn load_sprites(
     ));
 
     commands.spawn(AnimationHandlesContainer(handles));
+
+    // request the initial window move and resize
+    request_window_resize.send(RequestWindowResize);
+    request_window_move.send(RequestWindowRelativeMove);
 }
 
 /// event to request the next animation state
@@ -79,29 +85,11 @@ fn advance_state(
         animation_state_machine.advance_state();
         println!("{:?}", animation_state_machine.current_state);
 
-        let current_state = animation_state_machine.get_current_state();
-        request_window_resize.send(RequestWindowResize(
-            current_state.size[0],
-            current_state.size[1],
-        ));
+        request_window_resize.send(RequestWindowResize);
+        request_window_move.send(RequestWindowRelativeMove);
 
-        match current_state.translate {
-            Some(t) => {
-                request_window_move.send(RequestWindowRelativeMove(IVec2::new(
-                    current_state.offset[0] + t[0],
-                    current_state.offset[1] + t[1],
-                )));
-            }
-            None => {
-                request_window_move.send(RequestWindowRelativeMove(IVec2::new(
-                    current_state.offset[0],
-                    current_state.offset[1],
-                )));
-            }
-        }
+        swap_animation_handle(animation_state_machine, query, animation_handles_container);
     }
-
-    swap_animation_handle(animation_state_machine, query, animation_handles_container);
 }
 
 fn swap_animation_handle(
