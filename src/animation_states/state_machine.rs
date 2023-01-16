@@ -30,6 +30,7 @@ pub struct AnimationStateMachine {
     states: HashMap<String, AnimationState>,
     pub current_state: String,
     pub is_heading_right: bool,
+    pub position: IVec2,
 }
 
 impl AnimationStateMachine {
@@ -42,6 +43,7 @@ impl AnimationStateMachine {
             states,
             current_state: initial_state,
             is_heading_right: true,
+            position: IVec2::new(400, 400),
         }
     }
 

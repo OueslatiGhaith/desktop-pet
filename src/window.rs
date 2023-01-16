@@ -22,9 +22,7 @@ impl Plugin for CustomWindowPlugin {
                             title: "Desktop-Pet".to_string(),
                             transparent: true,
                             decorations: false,
-                            height: 50.0,
-                            width: 50.0,
-                            position: WindowPosition::Centered,
+                            // override minimum window size to allow for small sprites
                             resize_constraints: WindowResizeConstraints {
                                 min_width: 10.0,
                                 min_height: 10.0,
@@ -42,9 +40,20 @@ impl Plugin for CustomWindowPlugin {
             )
             .add_event::<RequestWindowResize>()
             .add_event::<RequestWindowRelativeMove>()
+            .add_startup_system(setup)
             .add_system(resize_window)
             .add_system(move_window);
     }
+}
+
+// sets up the initial window configuration in accordance with the state machine
+fn setup(state_machine: Res<AnimationStateMachine>, mut windows: ResMut<Windows>) {
+    let position = &state_machine.position;
+    let size = state_machine.get_current_state().size;
+
+    let window = windows.get_primary_mut().unwrap();
+    window.set_position(MonitorSelection::Primary, position.clone());
+    window.set_resolution(size[0], size[1]);
 }
 
 /// event to request a window resize
@@ -68,31 +77,43 @@ fn resize_window(
 fn move_window(
     mut windows: ResMut<Windows>,
     mut event: EventReader<RequestWindowRelativeMove>,
-    animation_state_machine: ResMut<AnimationStateMachine>,
+    mut animation_state_machine: ResMut<AnimationStateMachine>,
 ) {
     for _ in event.iter() {
         let window = windows.get_primary_mut().unwrap();
 
         let current_state = animation_state_machine.get_current_state();
         let is_heading_right = &animation_state_machine.is_heading_right;
+        let current_position = &animation_state_machine.position;
+        let translation = current_state.translate.unwrap_or([0, 0]);
 
-        let new_position = {
-            let translation = current_state.translate.unwrap_or([0, 0]);
+        let new_position = match is_heading_right {
+            false => IVec2::new(
+                current_position.x - translation[0],
+                current_position.y + translation[1],
+            ),
+            true => IVec2::new(
+                current_position.x + translation[0],
+                current_position.y + translation[1],
+            ),
+        };
+
+        let new_window_position = {
             let offset = current_state.offset;
 
-            let old_position = window.position().unwrap();
             match is_heading_right {
                 false => IVec2::new(
-                    old_position.x - translation[0] - offset[0],
-                    old_position.y + translation[1] + offset[1],
+                    new_position.x + offset[0] / 2,
+                    new_position.y + offset[1] / 2,
                 ),
                 true => IVec2::new(
-                    old_position.x + translation[0] + offset[0],
-                    old_position.y + translation[1] + offset[1],
+                    new_position.x + offset[0] / 2,
+                    new_position.y + offset[1] / 2,
                 ),
             }
         };
 
-        window.set_position(MonitorSelection::Primary, new_position);
+        animation_state_machine.position = new_position;
+        window.set_position(MonitorSelection::Primary, new_window_position);
     }
 }
