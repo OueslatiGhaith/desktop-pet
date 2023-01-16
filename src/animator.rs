@@ -1,4 +1,4 @@
-use bevy::{prelude::*, time::FixedTimestep};
+use bevy::prelude::*;
 
 use crate::{
     animation_states::{state_machine::AnimationStateMachine, AnimationTimer, RequestNextState},
@@ -9,12 +9,12 @@ pub struct AnimatorPlugin;
 
 impl Plugin for AnimatorPlugin {
     fn build(&self, app: &mut App) {
-        // app.add_system(animate);
-        app.add_system_set(
-            SystemSet::new()
-                .with_run_criteria(FixedTimestep::step(0.001))
-                .with_system(animate),
-        );
+        app.add_system(animate);
+        // app.add_system_set(
+        //     SystemSet::new()
+        //         .with_run_criteria(FixedTimestep::step(0.001))
+        //         .with_system(animate),
+        // );
     }
 }
 
