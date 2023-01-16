@@ -7,7 +7,9 @@ edition = "2021"
 
 [dependencies]
 # TODO: remove dynamic before release build
-bevy = { version="0.9.1", features=["dynamic", "wayland"] }
+bevy = { version="0.9.1", features=["wayland"] }
+bevy_assets_bundler = "0.5.0"
+lazy_static = "1.4.0"
 rand = "0.8.5"
 serde = "1.0.152"
 serde_json = "1.0.91"
@@ -19,3 +21,7 @@ opt-level = 1
 # enable high optimizations for dependencies (incl. Bevy), but not for our code
 [profile.dev.package."*"]
 opt-level = 3
+
+[build-dependencies]
+bevy_assets_bundler = "0.5"
+lazy_static = "1.4.0"

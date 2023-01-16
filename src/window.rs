@@ -1,9 +1,7 @@
-use bevy::{
-    prelude::*,
-    window::{PresentMode, WindowResizeConstraints},
-};
+use bevy::{prelude::*, window::WindowResizeConstraints};
+use bevy_assets_bundler::BundledAssetIoPlugin;
 
-use crate::animation_states::state_machine::AnimationStateMachine;
+use crate::{animation_states::state_machine::AnimationStateMachine, r#mod::BUNDLE_OPTIONS};
 
 const CLEAR_COLOR: ClearColor = ClearColor(Color::NONE);
 
@@ -21,6 +19,7 @@ impl Plugin for CustomWindowPlugin {
                     // transparent window
                     .set(WindowPlugin {
                         window: WindowDescriptor {
+                            title: "Desktop-Pet".to_string(),
                             transparent: true,
                             decorations: false,
                             height: 50.0,
@@ -34,7 +33,12 @@ impl Plugin for CustomWindowPlugin {
                             ..default()
                         },
                         ..default()
-                    }),
+                    })
+                    .build()
+                    // configure asset bundler
+                    .add_before::<bevy::asset::AssetPlugin, _>(BundledAssetIoPlugin::from(
+                        BUNDLE_OPTIONS.clone(),
+                    )),
             )
             .add_event::<RequestWindowResize>()
             .add_event::<RequestWindowRelativeMove>()

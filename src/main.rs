@@ -4,6 +4,8 @@ mod animation_states;
 mod animator;
 mod window;
 
+mod r#mod;
+
 fn main() {
     App::new()
         .add_plugin(window::CustomWindowPlugin)
