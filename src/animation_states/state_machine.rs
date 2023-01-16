@@ -29,6 +29,7 @@ pub struct AnimationStateTransition {
 pub struct AnimationStateMachine {
     states: HashMap<String, AnimationState>,
     pub current_state: String,
+    pub is_heading_right: bool,
 }
 
 impl AnimationStateMachine {
@@ -40,6 +41,7 @@ impl AnimationStateMachine {
         Self {
             states,
             current_state: initial_state,
+            is_heading_right: true,
         }
     }
 

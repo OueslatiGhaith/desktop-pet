@@ -1,4 +1,7 @@
-use bevy::{prelude::*, window::WindowResizeConstraints};
+use bevy::{
+    prelude::*,
+    window::{PresentMode, WindowResizeConstraints},
+};
 
 use crate::animation_states::state_machine::AnimationStateMachine;
 
@@ -22,6 +25,7 @@ impl Plugin for CustomWindowPlugin {
                             decorations: false,
                             height: 50.0,
                             width: 50.0,
+                            position: WindowPosition::Centered,
                             resize_constraints: WindowResizeConstraints {
                                 min_width: 10.0,
                                 min_height: 10.0,
@@ -66,15 +70,23 @@ fn move_window(
         let window = windows.get_primary_mut().unwrap();
 
         let current_state = animation_state_machine.get_current_state();
+        let is_heading_right = &animation_state_machine.is_heading_right;
+
         let new_position = {
             let translation = current_state.translate.unwrap_or([0, 0]);
             let offset = current_state.offset;
 
             let old_position = window.position().unwrap();
-            IVec2::new(
-                old_position.x + translation[0] + offset[0],
-                old_position.y + translation[1] + offset[1],
-            )
+            match is_heading_right {
+                false => IVec2::new(
+                    old_position.x - translation[0] - offset[0],
+                    old_position.y + translation[1] + offset[1],
+                ),
+                true => IVec2::new(
+                    old_position.x + translation[0] + offset[0],
+                    old_position.y + translation[1] + offset[1],
+                ),
+            }
         };
 
         window.set_position(MonitorSelection::Primary, new_position);

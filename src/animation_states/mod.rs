@@ -1,6 +1,9 @@
 use bevy::{prelude::*, utils::HashMap};
+use rand::prelude::*;
 
 use crate::window::{RequestWindowRelativeMove, RequestWindowResize};
+
+use self::state_machine::AnimationStateMachine;
 
 mod cave_chaos;
 pub mod state_machine;
@@ -92,17 +95,31 @@ fn advance_state(
 }
 
 fn swap_animation_handle(
-    animation_state_machine: ResMut<state_machine::AnimationStateMachine>,
+    mut animation_state_machine: ResMut<AnimationStateMachine>,
     mut query: Query<&mut Handle<TextureAtlas>>,
     animation_handles_container: Query<&AnimationHandlesContainer>,
 ) {
-    let current_state = &animation_state_machine.current_state;
+    let current_state_name = &animation_state_machine.current_state;
+    let current_state = animation_state_machine.get_current_state();
+
     let current_animation_handle = animation_handles_container
         .single()
         .0
-        .get(current_state)
+        .get(current_state_name)
         .unwrap();
 
+    if current_state.translate.is_some() {
+        // if the current state requires a translation, then randomly decide if it should be flipped
+        let mut rng = rand::thread_rng();
+        // the flip is biased towards keeping the same direction
+        let flip_direction = rng.gen_range(0..100) > 60;
+
+        animation_state_machine.is_heading_right = match animation_state_machine.is_heading_right {
+            true => !flip_direction,
+            false => flip_direction,
+        };
+    }
     let mut handle = query.single_mut();
+
     *handle = current_animation_handle.clone();
 }

@@ -32,13 +32,17 @@ fn animate(
             let texture_atlas = texture_atlases.get(texture_atlas_handle).unwrap();
 
             if sprite.index + 1 == texture_atlas.textures.len() {
+                // swapping to the next state
                 sprite.index = 0;
                 request_next_state.send(RequestNextState);
             } else {
+                // advancing to the next frame in the current state
                 sprite.index += 1;
+                sprite.flip_x = !animation_state_machine.is_heading_right;
 
                 let current_state = animation_state_machine.get_current_state();
                 if current_state.translate.is_some() {
+                    // current frame requires a window move
                     request_window_move.send(RequestWindowRelativeMove)
                 }
             }
