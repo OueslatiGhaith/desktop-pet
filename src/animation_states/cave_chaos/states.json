@@ -75,7 +75,7 @@
     "transitions_to": [
       {
         "target": "miner_irish",
-        "probability": 0.1
+        "probability": 0.2
       },
       {
         "target": "miner_flip",
@@ -83,7 +83,7 @@
       },
       {
         "target": "miner_tired",
-        "probability": 0.1
+        "probability": 0.2
       }
     ]
   },

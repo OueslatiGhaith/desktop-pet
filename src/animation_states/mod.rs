@@ -112,7 +112,7 @@ fn swap_animation_handle(
         // if the current state requires a translation, then randomly decide if it should be flipped
         let mut rng = rand::thread_rng();
         // the flip is biased towards keeping the same direction
-        let flip_direction = rng.gen_range(0..100) > 60;
+        let flip_direction = rng.gen_range(0..100) > 90;
 
         animation_state_machine.is_heading_right = match animation_state_machine.is_heading_right {
             true => !flip_direction,
