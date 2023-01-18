@@ -9,64 +9,67 @@ on:
       - ci_test 
 
 jobs:
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          components: rustfmt
-      - name: Format
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-
-  lint:
-    runs-on: ubuntu-latest
-    needs: format
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          components: clippy
-      - name: Lint
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-
   build:
     runs-on: ubuntu-latest
     needs: lint
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Setup rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          target:
+            - x86_64-unknown-linux-gnu
+            - x86_64-pc-windows-gnu
+
+      - name: format
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+
+      - name: lint
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+
       - name: Build for linux
         uses: actions-rs/cargo@v1
         with:
           command: build 
-          args: --release
-      - name: Zip
+          args: --release --target x86_64-unknown-linux-gnu
+
+      - name: Build for Windows
+        uses: actions-rs/cargo@v1
+        with:
+          command: build 
+          args: --release --target x86_64-pc-windows-gnu
+
+      - name: Zip for Linux
         uses: vimtor/action-zip@v1
         with:
           files: |
-            target/release/desktop-pet-rs
-            target/release/assets.bin
+            target/release/x86_64-unknown-linux-gnu/desktop-pet-rs
+            target/release/x86_64-unknown-linux-gnu/assets.bin
             README.md
           dest: desktop-pet_linux_x86-64.zip
+
+      - name: Zip for Windows
+        uses: vimtor/action-zip@v1
+        with:
+          files: |
+            target/release/x86_64-pc-windows-gnu/desktop-pet-rs
+            target/release/x86_64-pc-windows-gnu/assets.bin
+            README.md
+          dest: desktop-pet_windows_x86-64.zip
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: desktop-pet_linux_x86-64.zip
+          files: |
+            desktop-pet_linux_x86-64.zip
+            desktop-pet_windows_x86-64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
