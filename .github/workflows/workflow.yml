@@ -55,7 +55,7 @@ jobs:
         uses: vimtor/action-zip@v1
         with:
           files: |
-            target/x86_64-pc-windows-gnu/release/desktop-pet-rs
+            target/x86_64-pc-windows-gnu/release/desktop-pet-rs.exe
             target/x86_64-pc-windows-gnu/release/assets.bin
             README.md
           dest: desktop-pet_windows_x86-64.zip
