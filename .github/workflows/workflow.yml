@@ -16,6 +16,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install system dependencies
+        run: sudo apt install -y alsa
+
       - name: Setup rust
         uses: actions-rs/toolchain@v1
         with:
