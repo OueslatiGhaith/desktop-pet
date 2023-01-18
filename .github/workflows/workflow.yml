@@ -25,13 +25,13 @@ jobs:
           command: build --release
           args: --verbose
       - name: Zip
-        uses: TheDoctor0/zip-release@v1
+        uses: vimtor/action-zip@v1
         with:
           files: |
             target/release/desktop-pet-rs
             target/release/assets.bin
             README.md
-          name: desktop-pet_linux_x86-64.zip
+          dest: desktop-pet_linux_x86-64.zip
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
