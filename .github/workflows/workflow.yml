@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - ci_test
-  pull_request:
-    branches:
-      - ci_test 
+    tags:
+      - '*'
 
 jobs:
   build:
