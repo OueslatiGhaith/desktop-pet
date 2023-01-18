@@ -9,8 +9,40 @@ on:
       - ci_test 
 
 jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt
+      - name: Format
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+
+  lint:
+    runs-on: ubuntu-latest
+    depends_on: format
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy
+      - name: Lint
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+
   build:
     runs-on: ubuntu-latest
+    depends_on: lint
     steps:
       - name: Checkout
         uses: actions/checkout@v2
