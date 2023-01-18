@@ -26,7 +26,7 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    depends_on: format
+    needs: format
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -42,7 +42,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    depends_on: lint
+    needs: lint
     steps:
       - name: Checkout
         uses: actions/checkout@v2
