@@ -1,0 +1,41 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - ci_test
+  pull_request:
+    branches:
+      - ci_test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build --release
+          args: --verbose
+      - name: Zip
+        uses: TheDoctor0/zip-release@v1
+        with:
+          files: |
+            target/release/desktop-pet-rs
+            target/release/assets.bin
+            README.md
+          name: desktop-pet_linux_x86-64.zip
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: desktop-pet_linux_x86-64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
